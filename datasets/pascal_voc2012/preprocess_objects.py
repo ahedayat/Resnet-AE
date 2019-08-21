@@ -3,6 +3,7 @@ import shutil
 import numpy as np
 import xml.etree.ElementTree as ET
 from PIL import Image
+from optparse import OptionParser
 
 def mkdir(dir_path, dir_name, forced_remove=False):
 	new_dir = '{}/{}'.format(dir_path,dir_name)
@@ -148,9 +149,9 @@ def preprocess(data_dir, data_mode, saving_points, saving_dsts):
 	for (saving_dst, data_mode, saving_point) in zip(saving_dsts, data_modes, saving_points):
 		save_data(data_mode, pascal_images_dir, pascal_masks_dir, saving_dst='{}/{}'.format(saving_dst, data_mode), saving_point=saving_point)
 
-def _main():
-	pascal_trainval_path = '/home/mlcm-deep/ahedayat/resnet_last/datasets/pascal_voc2012/voc_trainval/VOC2012'
-	pascal_test_path = '/home/mlcm-deep/ahedayat/resnet_last/datasets/pascal_voc2012/voc_test/VOC2012'
+def _main(args):
+	pascal_trainval_path = args.trainval
+	pascal_test_path = args.test
 	
 	trainval_saving_points = [(0.,0.8), (0.8,1.)]
 	test_saving_points = [(0.,1.)]
@@ -161,6 +162,16 @@ def _main():
 	preprocess(pascal_trainval_path, 'trainval', trainval_saving_points, trainval_saving_dst)
 	preprocess(pascal_test_path, 'test', test_saving_points, test_saving_dst)
 
+def get_args():
+	parser = OptionParser()
+	parser.add_option('--trainval_data', dest='trainval', default=1, type='string',
+						help='trainval data path')
+	parser.add_option('--test_data', dest='test', default=1, type='string',
+						help='test data path')
+	(options, args) = parser.parse_args()
+	return options
+
 if __name__ == "__main__":
-	_main()
+	args = get_args()
+	_main(args)
 	
