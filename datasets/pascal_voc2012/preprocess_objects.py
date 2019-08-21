@@ -96,6 +96,7 @@ def save_data(data_mode, pascal_images_dir, pascal_masks_dir, saving_dst='.', sa
 		mkdir('{}'.format(curr_data_saving_path), 'images', forced_remove=False)
 		mkdir('{}'.format(curr_data_saving_path), 'masks', forced_remove=False)
 		mkdir('{}'.format(curr_data_saving_path), 'colors', forced_remove=False)
+		mkdir('{}'.format(curr_data_saving_path), 'objs_info', forced_remove=False)
 
 
 		copy_file(	pascal_images_dir, 
@@ -138,8 +139,8 @@ def preprocess(data_dir, data_mode, saving_points, saving_dsts):
 	pascal_masks_dir = '{}/SegmentationClass'.format(data_dir)
 
 	data_modes = ['train', 'val'] if data_mode=='trainval' else ['test']
-	assert len(data_mode)==len(saving_points), 'saving points must has {} saving point.'.format( len(data_mode) )
-	assert len(data_mode)==len(saving_dsts), 'saving destinations must has {} saving destination.'.format( len(data_mode) )
+	assert len(data_modes)==len(saving_points), 'saving points must has {} saving point.'.format( len(data_mode) )
+	assert len(data_modes)==len(saving_dsts), 'saving destinations must has {} saving destination.'.format( len(data_mode) )
 	
 
 	
@@ -160,7 +161,7 @@ def _main(args):
 	test_saving_dst = '.'
 
 	preprocess(pascal_trainval_path, 'trainval', trainval_saving_points, trainval_saving_dst)
-	preprocess(pascal_test_path, 'test', test_saving_points, test_saving_dst)
+	# preprocess(pascal_test_path, 'test', test_saving_points, test_saving_dst)
 
 def get_args():
 	parser = OptionParser()
