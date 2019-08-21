@@ -164,9 +164,9 @@ def _main(args):
 
 def get_args():
 	parser = OptionParser()
-	parser.add_option('--trainval_data', dest='trainval', default=1, type='string',
+	parser.add_option('--trainval_data', dest='trainval', default='./voc_trainval', type='string',
 						help='trainval data path')
-	parser.add_option('--test_data', dest='test', default=1, type='string',
+	parser.add_option('--test_data', dest='test', default='./voc_test', type='string',
 						help='test data path')
 	(options, args) = parser.parse_args()
 	return options
