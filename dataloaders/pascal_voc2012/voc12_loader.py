@@ -6,7 +6,9 @@ import torchvision.transforms as transforms
 
 from PIL import Image
 from torch.utils.data import Dataset
-from .voc12_loader_utils import read_line
+from .voc12_loader_utils import read_salient_obj
+
+from ..utils.utils import ls
 
 
 class VOC2012Loader(Dataset):
@@ -25,27 +27,30 @@ class VOC2012Loader(Dataset):
         self.objs_info_path = '{}/objs_info'.format(data_dir)
         self.obj_area_threshold = obj_area_threshold
 
-        self.file_names = [line.rstrip('\n').split()[0] for line in open(
-            '{}/filenames.txt'.format(data_dir))]
+        self.file_names = self.get_file_names(data_dir)
         self.data_transform = data_transform
         self.labels = None
 
         self.preprocess()
 
+    def get_file_names(self, data_dir):
+        file_names = ls('{}/objs_info')
+        file_names = [os.path.splitext(file_name)[0]
+                      for file_name in file_names]
+        return file_names
+
     def preprocess(self):
         self.labels = list()
         for ix in range(len(self.file_names)):
-            file_name = os.path.splitext(self.file_names[ix])[0]
+            file_name = self.file_names[ix]
 
-            label, relative_area, _ = read_line(
+            label, relative_area, _ = read_salient_obj(
                 self.objs_info_path,
-                '{}.txt'.format(file_name),
-                0).split(' ')
+                '{}.txt'.format(file_name))
 
-            relative_area = float(relative_area)
             if relative_area < self.obj_area_threshold:
                 self.file_names.remove(self.file_names[ix])
-            self.file_names[ix] = (self.file_names[ix], int(label))
+            self.file_names[ix] = (self.file_names[ix], label)
             if label not in self.labels:
                 self.labels.append(label)
 
