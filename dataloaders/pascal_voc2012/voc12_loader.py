@@ -8,7 +8,7 @@ from PIL import Image
 from torch.utils.data import Dataset
 from .voc12_loader_utils import read_salient_obj
 
-from ..utils.utils import ls
+from utils.utils import ls
 
 
 class VOC2012Loader(Dataset):
@@ -34,13 +34,15 @@ class VOC2012Loader(Dataset):
         self.preprocess()
 
     def get_file_names(self, data_dir):
-        file_names = ls('{}/objs_info')
+        file_names = ls('{}/objs_info'.format(data_dir))
         file_names = [os.path.splitext(file_name)[0]
                       for file_name in file_names]
         return file_names
 
     def preprocess(self):
         self.labels = list()
+        self.labels.append(0)  # Background
+        self.labels.append(21)  # Viod
         for ix in range(len(self.file_names)):
             file_name = self.file_names[ix]
 
