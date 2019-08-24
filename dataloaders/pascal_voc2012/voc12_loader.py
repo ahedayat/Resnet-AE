@@ -69,12 +69,11 @@ class VOC2012Loader(Dataset):
 
         image = torch.tensor(np.array(image), dtype=torch.float)
         mask = torch.tensor(np.array(mask), dtype=torch.float)
-        output = torch.zeros((len(self.labels)), dtype=torch.float)
-        output[category] = 1.
+        # output = torch.zeros((len(self.labels)-2), dtype=torch.float)
+        # output[category-1] = 1.
+        output = torch.tensor([category-1])
 
         image = image.view(image.size()[2], image.size()[0], image.size()[1])
-        # print(mask.size())
-        # mask = mask.view(mask.size()[1], mask.size()[0], mask.size()[1])
 
         return image, mask, output
 
