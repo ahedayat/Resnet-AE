@@ -30,7 +30,8 @@ def ae_resnet_save(file_path, file_name, ae_resnet, optimizer=None):
 
 
 def ae_resnet_load(file_path, file_name, model, optimizer=None):
-    check_points = torch.load('{}/{}.pth'.format(file_path, file_name))
+    check_points = torch.load(
+        '{}/{}.pth'.format(file_path, file_name))
     keys = check_points.keys()
 
     assert ('net_arch' in keys) and (
@@ -111,7 +112,7 @@ def ae_resnet_train(
                         X), nn.DataParallel(M), nn.DataParallel(Y)
                 else:
                     X, M, Y = X.cuda(device=device), M.cuda(
-                        device == device), Y.cuda(device=device)
+                        device=device), Y.cuda(device=device)
 
             output = ae_resnet((X, M))
 
@@ -132,11 +133,12 @@ def ae_resnet_train(
             losses.append(curr_loss)
             accuracies.append(acc)
 
-            print('alpha= %.2f, epoch=%d, batch=%d(x%d), prev_loss=%.3f, curr_loss=%.3f, delta=%.3f, acc=%.3f%%' % (
+            print('alpha= %.2f, epoch=%d, batch=%d(x%d), ae_rate=%.4f, prev_loss=%.3f, curr_loss=%.3f, delta=%.3f, acc=%.3f%%' % (
                 new_ae_rate,
                 epoch,
                 ix,
                 output.size()[0],
+                ae_resnet.ae_alpha,
                 prev_loss,
                 curr_loss,
                 curr_loss-prev_loss,
@@ -171,7 +173,7 @@ def ae_resnet_train(
         if saving_model_every_epoch:
             ae_resnet_save(
                 '{}/models'.format(report_path),
-                'vqanet_epoch_{}'.format(epoch),
+                'ae_resnet_epoch_{}'.format(epoch),
                 ae_resnet,
                 optimizer=optimizer
             )
@@ -220,10 +222,10 @@ def ae_resnet_eval(
 
         output = ae_resnet((X, None))
 
+        target = Y
         if isinstance(criterion, nn.CrossEntropyLoss):
-            Y = torch.argmax(Y, dim=1)
-
-        loss = criterion(output, Y)
+            target = torch.argmax(target, dim=1)
+        loss = criterion(output, target)
         acc = ae_resnet_accuracy(output, Y)
 
         prev_loss = curr_loss

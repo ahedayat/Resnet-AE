@@ -7,8 +7,8 @@ device='cpu'
 ##### Training Hyper-Parameter #####
 start_epochs=0
 num_epochs=10
-batch_size=100
-num_workers=2
+batch_size=1
+num_workers=1
 
 ##### Optimizer Specifications #####
 optimizer='sgd'

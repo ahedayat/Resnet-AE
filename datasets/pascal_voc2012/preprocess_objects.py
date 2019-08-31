@@ -123,7 +123,7 @@ def save_data(data_mode, pascal_images_dir, pascal_masks_dir, saving_dst='.', sa
 										ix / num_data * 100
 										), end='\r')
 
-	labels, _ = get_labels()
+	labels = get_labels()
 	for ix,(label) in enumerate(labels):
 		write_file(	saving_dst, 
 					'objects_colors.txt', '{} {}'.format(	ix, 

@@ -21,7 +21,10 @@ def _main(args):
     #### Preparing Dataset ####
     data_dir = './datasets/pascal_voc2012/train/1'
     labels_address = './datasets/pascal_voc2012/data_labels.txt'
-    train_data_transform = None
+    train_data_transform = torch_transforms.Compose([
+        torch_transforms.Resize((248, 248))
+    ])
+
     train_obj_area_threshold = 0.
     dataloader = voc12.loader(data_dir,
                               data_transform=train_data_transform,
